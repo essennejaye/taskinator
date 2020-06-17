@@ -1,4 +1,4 @@
-
+var pageContentEl = document.querySelector("#page-content");
 var taskIdCounter = 0;
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
@@ -58,7 +58,7 @@ var createTaskActions = function (taskId) {
     editButtonEl.setAttribute("data-task-id", taskId);
     actionContainerEl.appendChild(editButtonEl);
 
-    // create dleete button
+    // create delete button
     var deleteButtonEl = document.createElement("button");
     deleteButtonEl.className = "btn delete-btn";
     deleteButtonEl.textContent = "Delete";
@@ -84,5 +84,37 @@ var createTaskActions = function (taskId) {
 
     return actionContainerEl;
 }
-
+// delete selected task
+var deleteTask = function (taskId) {
+    // get task item list element
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+    taskSelected.remove();
+}
+// edit selected task
+var editTask = function (taskId) {
+    // get task item list element
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+    // get content from task name and type
+    var taskName = taskSelected.querySelector("h3.task-name").textContent
+    var taskType = taskSelected.querySelector("span.task-type").textContent;
+    document.querySelector("input[name='task-name']").value = taskName;
+    document.querySelector("select[name='task-type']").value = taskType;
+    document.querySelector("#save-task").textContent = "Save Task";
+    formEl.setAttribute("data-task-id", taskId);
+}
 formEl.addEventListener("submit", taskFormHandler);
+// get target element from event
+var taskButtonHandler = function (event) {
+    var targetEl = event.target;
+    // edit button clicked
+    if (targetEl.matches(".edit-btn")) {
+        var taskId = targetEl.getAttribute("data-task-id");
+        editTask(taskId);
+    }
+    else if (targetEl.matches(".delete-btn")) {
+        // get the button element's task id
+        var taskId = targetEl.getAttribute("data-task-id");
+        deleteTask(taskId);
+    }
+}
+pageContentEl.addEventListener("click", taskButtonHandler);
