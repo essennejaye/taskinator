@@ -14,13 +14,30 @@ var taskFormHandler = function () {
         return false;
     }
     formEl.reset();
+    var isEdit = formEl.hasAttribute("data-task-id");
     // create object from user input
-    var taskDataObj = {
-        name: taskNameInput,
-        type: taskTypeInput
+    // has data attribute, so get task id and call function to complete edit process
+    if (isEdit) {
+        var taskId = formEl.getAttribute("data-task-id");
+        completeEditTask(taskNameInput, taskTypeInput, taskId);
+    }
+    // no data task id attribute, so create object as normal and pass to createTaskEl function
+    else {
+        var taskDataObj = {
+            name: taskNameInput,
+            type: taskTypeInput
+        }
+        createTaskEl(taskDataObj);
     };
-    // send it as argument to createTaskEl
-    createTaskEl(taskDataObj);
+}
+var completeEditTask = function(taskName, taskType, taskId) {
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+    // set new values
+    taskSelected.querySelector("h3.task-name").textContent = taskName;
+    taskSelected.querySelector("span.task-type").taskType;
+    alert("Task Updated");
+    formEl.removeAttribute("data-task-id");
+    document.querySelector("#save-task").textContent = "Ask Task";
 }
 // use taskDataObj to create task
 var createTaskEl = function (taskDataObj) {
